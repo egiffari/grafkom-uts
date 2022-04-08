@@ -3,7 +3,7 @@
 var canvas;
 var gl;
 
-var numPositions = 10000;
+var numPositions = 100000;
 
 var positions = [];
 var colors = [];
@@ -19,22 +19,17 @@ var theta = [0, 0, 0];
 
 var thetaLoc;
 
-const OFFSET = 1/16 *1.25;
-const START_X = OFFSET * 8 * -1;
-const START_Y = OFFSET * 8;
-const START_Z = OFFSET / 2 * -1;
+const OFFSET = 1/16 *1.25 *0.25;
+const START_X = OFFSET * 32 * -1 / 2;
+const START_Y = OFFSET * 32 ;
+const START_Z = OFFSET / 2 * -1 ;
 
-var item;
+var pokemon1;
+var pokemon2;
 
 init();
 
 async function init() {
-    let ctx = localStorage.getItem("itemContext")
-    if (!ctx) {
-        item = "diamond_pickaxe"
-    } else {
-        item = ctx
-    }
 
     canvas = document.getElementById("gl-canvas");
 
@@ -46,7 +41,7 @@ async function init() {
     initVoxels();
 
     gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(85/255, 85/255, 85/255, 1.0);
+    gl.clearColor(1, 1, 1, 1.0);
 
     gl.enable(gl.DEPTH_TEST);
 
@@ -77,24 +72,7 @@ async function init() {
 
     //event listeners for buttons
 
-    document.getElementById("xButton").onclick = function () {
-        axis = xAxis;
-    };
-    document.getElementById("yButton").onclick = function () {
-        axis = yAxis;
-    };
-    document.getElementById("zButton").onclick = function () {
-        axis = zAxis;
-    };
-
     render();
-}
-
-function set() {
-    let select = document.getElementById('select')
-    item = select.value
-    localStorage.setItem("itemContext", item)
-    location.reload()
 }
 
 async function initPaintedVoxels() {
@@ -104,12 +82,12 @@ async function initPaintedVoxels() {
     return new Promise ((resolve) => {
         var texture = new Image();
         texture.crossOrigin = "Anonymous"
-        texture.src = 'https://raw.githubusercontent.com/KentaBisma/GrafKom-LatLab-2/master/items/'+item+'.png';
+        texture.src = 'https://raw.githubusercontent.com/egiffari/grafkom-uts/main/images/'+pokemon1+'.png';
         texture.onload = async () => {
             context.drawImage(texture, 0, 0);
-            for (let i = 0; i < 16; i++) {
+            for (let i = 0; i < 64; i++) {
                 var row = []
-                for (let j = 15; j >= 0; j--) {
+                for (let j = 63; j >= 0; j--) {
                     var imgData = context.getImageData(i, j, 1, 1).data;
                     row.push([imgData[0] / 255, imgData[1] / 255, imgData[2] / 255, imgData[3] / 255])
                 }
@@ -121,8 +99,8 @@ async function initPaintedVoxels() {
 }
 
 function initVoxels() {
-    for (let i = 15; i >= 0; i--) {
-        for (let j = 15; j >= 0; j--) {
+    for (let i = 63; i >= 0; i--) {
+        for (let j = 63; j >= 0; j--) {
             let color = colorArray[i][j];
             if (color[3] != 0) {
                 voxel(i, j, vec4(color[0], color[1], color[2], color[3]))
@@ -142,13 +120,13 @@ function voxel(x, y, color) {
 
 function quad(x, y, a, b, c, d, color) {
     
-    let L = OFFSET * x + START_X;
+    let L = OFFSET / 2 * x + START_X;
     let U = OFFSET * y - START_Y;
     let B = START_Z;
 
-    let R = L + OFFSET;
+    let R = L + OFFSET / 2;
     let D = U + OFFSET;
-    let F = B + OFFSET;
+    let F = B + 0;
 
     var vertices = [
         vec4(L, D, F, 1.0),
