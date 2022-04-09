@@ -17,14 +17,21 @@ var zAxis = 2;
 var axis = 1;
 var theta = [0, 0, 0];
 
-var thetaLoc;
+var cBuffer;
+var vBuffer;
+
+var matrixLoc;
+var colorLoc;
+var positionLoc;
 
 const OFFSET = 1/16 *1.25 / 4;
 const START_X = OFFSET * 32 * -1 / 2;
 const START_Y = OFFSET * 32;
 const START_Z = 0;
 
-var pokemon = 1;
+var pokemon1 = new Pokemon(1, M3.identity());
+var pokemon2 = new Pokemon(4, M3.translation(0.6, 0));
+var pokemon3 = new Pokemon(7, M3.translation(-0.6, 0));
 
 init();
 
@@ -34,14 +41,14 @@ async function init() {
     gl = canvas.getContext('webgl2');
     if (!gl) alert("WebGL 2.0 isn't available");
 
-    // Get pixel texture
-    await initPaintedPixels();
-    initPixels();
-
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(85/255, 85/255, 85/255, 1.0);
 
     gl.enable(gl.DEPTH_TEST);
+
+    await pokemon1.init()
+    await pokemon2.init()
+    await pokemon3.init()
 
     //
     //  Load shaders and initialize attribute buffers
@@ -49,110 +56,51 @@ async function init() {
     var program = initShaders(gl, "vertex-shader", "fragment-shader");
     gl.useProgram(program);
 
-    var cBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
+    cBuffer = gl.createBuffer();
+    vBuffer = gl.createBuffer();
+    colorLoc = gl.getAttribLocation(program, "aColor");
+    positionLoc = gl.getAttribLocation(program, "aPosition");
 
-    var colorLoc = gl.getAttribLocation(program, "aColor");
-    gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(colorLoc);
-
-    var vBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-
-    gl.bufferData(gl.ARRAY_BUFFER, flatten(positions), gl.STATIC_DRAW);
-
-
-    var positionLoc = gl.getAttribLocation(program, "aPosition");
-    gl.vertexAttribPointer(positionLoc, 4, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(positionLoc);
-
-    thetaLoc = gl.getUniformLocation(program, "uTheta");
+    matrixLoc = gl.getUniformLocation(program, "uMatrix");
 
     //event listeners for buttons
 
-    render();
+    render()
+}    
+
+function updateColorBuffer(cBuffer, colorArray) {
+    gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(colorArray), gl.STATIC_DRAW);
+    gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(colorLoc);
 }
 
-async function initPaintedPixels() {
-    var textureCanvas = document.getElementById('texture');
-    var context = textureCanvas.getContext('2d');
-
-    return new Promise ((resolve) => {
-        var texture = new Image();
-        texture.crossOrigin = "Anonymous"
-        texture.src = 'https://raw.githubusercontent.com/egiffari/grafkom-uts/main/images/'+pokemon+'.png';
-        texture.onload = async () => {
-            context.drawImage(texture, 0, 0);
-            for (let i = 0; i < 64; i++) {
-                var row = []
-                for (let j = 63; j >= 0; j--) {
-                    var imgData = context.getImageData(i, j, 1, 1).data;
-                    row.push([imgData[0] / 255, imgData[1] / 255, imgData[2] / 255, imgData[3] / 255])
-                }
-                colorArray.push(row)
-            }
-            resolve(true)
-        }
-    })
+function updatePositionBuffer(vBuffer, positionArray) {
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(positionArray), gl.STATIC_DRAW);
+    gl.vertexAttribPointer(positionLoc, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(positionLoc);
 }
 
-function initPixels() {
-    for (let i = 63; i >= 0; i--) {
-        for (let j = 63; j >= 0; j--) {
-            let color = colorArray[i][j];
-            if (color[3] != 0) {
-                pixel(i, j, vec4(color[0], color[1], color[2], color[3]))
-            }
-        }
-    }
+function updateMatrixData(matrix) {
+    gl.uniformMatrix3fv(matrixLoc, false, matrix);
 }
 
-function pixel(x, y, color) {
-    quad(x, y, 1, 0, 3, 2, color);
-    quad(x, y, 2, 3, 7, 6, color);
-    quad(x, y, 3, 0, 4, 7, color);
-    quad(x, y, 6, 5, 1, 2, color);
-    quad(x, y, 4, 5, 6, 7, color);
-    quad(x, y, 5, 4, 0, 1, color);
+function draw(numVert) {
+    gl.drawArrays(gl.TRIANGLES, 0, numVert);
 }
 
-function quad(x, y, a, b, c, d, color) {
-    
-    let L = OFFSET * x / 2 + START_X;
-    let U = OFFSET * y - START_Y;
-    let B = START_Z;
-
-    let R = L + OFFSET / 2;
-    let D = U + OFFSET;
-    let F = B + 0;
-
-    var vertices = [
-        vec4(L, D, F, 1.0),
-        vec4(L, U, F, 1.0),
-        vec4(R, U, F, 1.0),
-        vec4(R, D, F, 1.0),
-        vec4(L, D, B, 1.0),
-        vec4(L, U, B, 1.0),
-        vec4(R, U, B, 1.0),
-        vec4(R, D, B, 1.0)
-    ];
-
-    var indices = [a, b, c, a, c, d];
-    
-
-    for (var i = 0; i < indices.length; ++i) {
-        positions.push(vertices[indices[i]]);
-        colors.push(vec4(color));
-    }
+function drawPokemon(cBuffer, vBuffer, pokemon) {
+    updatePositionBuffer(vBuffer, pokemon.mesh)
+    updateColorBuffer(cBuffer, pokemon.color)
+    updateMatrixData(pokemon.originMatrix);
+    draw(pokemon.mesh.length)
 }
 
 function render() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    theta[axis] += 0;
-    gl.uniform3fv(thetaLoc, theta);
-
-    gl.drawArrays(gl.TRIANGLES, 0, positions.length);
+    drawPokemon(cBuffer, vBuffer, pokemon1);
+    drawPokemon(cBuffer, vBuffer, pokemon2);
+    drawPokemon(cBuffer, vBuffer, pokemon3);
     requestAnimationFrame(render);
 }

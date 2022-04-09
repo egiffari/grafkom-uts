@@ -8,17 +8,16 @@
 
 <body>
     <div id="wrapper">
-        <h1>LatLab 2-1</h1>
+        <h1>UTS-1</h1>
         <h2>Muhammad Kenta</h2>
         <h3>1906350950</h3>
         <div class="flex">
             <canvas id="gl-canvas" width="1024" height="512"></canvas>
-            <canvas style="display: none;" id="texture" width="64" height="64"></canvas>
 
             <div style="width: 100%; margin-top: 30px; display: flex; flex-direction: column; gap: 15px;">
             </div>
             <div style="width: 100%; margin-top: 10px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 15px;">
-                <span style="font-size: small;">*Aset gambar diambil dari game Minecraft</span>
+                <span style="font-size: small;">*Aset gambar diambil dari game PokeMon</span>
             </div>
         </div>
     </div>
@@ -30,36 +29,12 @@
     in  vec4 aColor;
     out vec4 vColor;
     
-    uniform vec3 uTheta;
+    uniform mat3 uMatrix;
     
     void main()
     {
-        // Compute the sines and cosines of theta for each of
-        //   the three axes in one computation.
-        vec3 angles = radians(uTheta);
-        vec3 c = cos(angles);
-        vec3 s = sin(angles);
-    
-        // Remeber: thse matrices are column-major
-        mat4 rx = mat4(1.0,  0.0,  0.0, 0.0,
-                0.0,  c.x,  s.x, 0.0,
-                0.0, -s.x,  c.x, 0.0,
-                0.0,  0.0,  0.0, 1.0);
-    
-        mat4 ry = mat4(c.y, 0.0, -s.y, 0.0,
-                0.0, 1.0,  0.0, 0.0,
-                s.y, 0.0,  c.y, 0.0,
-                0.0, 0.0,  0.0, 1.0);
-    
-    
-        mat4 rz = mat4(c.z, s.z, 0.0, 0.0,
-                -s.z,  c.z, 0.0, 0.0,
-                0.0,  0.0, 1.0, 0.0,
-                0.0,  0.0, 0.0, 1.0);
-    
         vColor = aColor;
-        gl_Position = rz * ry * rx * aPosition;
-        gl_Position.z = -gl_Position.z;
+        gl_Position = vec4((uMatrix * vec3(aPosition.xy, 1)).xy, 0, 1);
     }
 </script>
 
@@ -78,8 +53,10 @@
     }
 </script>
 
+<script src="https://greggman.github.io/webgl-lint/webgl-lint.js" crossorigin></script>
 <script src="./Common/initShaders.js"></script>
 <script src="./Common/MVnew.js"></script>
+<script src="./classes.js"></script>
 <script src="./uts-1.js"></script>
 
 </html>
