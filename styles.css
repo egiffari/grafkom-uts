@@ -67,3 +67,13 @@ select:focus {
     outline: none;
     filter: brightness(0.9);
 }
+
+#toggle-buttons {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 10px;
+}
+
+#toggle-buttons > button {
+    width: 100%;
+}

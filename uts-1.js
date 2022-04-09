@@ -31,8 +31,7 @@ const TRANSFORMATIONS = {
         return trf.step - trf.amount
     }),
     rotation: new TransformationStep(0.05, (trf) => {
-        let res = trf.step + trf.amount;
-        return res
+        return trf.step + trf.amount
     }),
     scale: new TransformationStep(0.01, (trf) => {
         if (trf.step > 1.5 || trf.step < 0.5) trf.amount = -trf.amount
@@ -40,17 +39,18 @@ const TRANSFORMATIONS = {
     }, 1),
 }
 
-var pokemon1 = new Pokemon(1, M3.identity(), () => {
+// Angka bisa diganti untuk mengganti jenis pokemon
+var pokemon1 = new Pokemon(2, M3.identity(), () => {
     let res = M3.translation(0, TRANSFORMATIONS.translation.step);
     TRANSFORMATIONS.translation.next()
     return M3.multiply(res, M3.projection(canvas.width, canvas.height))
 });
-var pokemon2 = new Pokemon(4, M3.translation(0.6, 0), () => {
+var pokemon2 = new Pokemon(3, M3.translation(0.6, 0), () => {
     let res = M3.rotation(TRANSFORMATIONS.rotation.step);
     TRANSFORMATIONS.rotation.next()
     return M3.multiply(res, M3.projection(canvas.width, canvas.height))
 });
-var pokemon3 = new Pokemon(7, M3.translation(-0.6, 0), () => {
+var pokemon3 = new Pokemon(1, M3.translation(-0.6, 0), () => {
     let res = M3.scaling(TRANSFORMATIONS.scale.step, TRANSFORMATIONS.scale.step);
     TRANSFORMATIONS.scale.next()
     return M3.multiply(res, M3.projection(canvas.width, canvas.height))
@@ -69,6 +69,7 @@ async function init() {
 
     gl.enable(gl.DEPTH_TEST);
 
+    // Load tekstur Pokemon dan generate vertex
     await pokemon1.init()
     await pokemon2.init()
     await pokemon3.init()
@@ -87,6 +88,8 @@ async function init() {
     matrixLoc = gl.getUniformLocation(program, "uMatrix");
 
     //event listeners for buttons
+
+
 
     render()
 }    
@@ -128,4 +131,18 @@ function render() {
     drawPokemon(cBuffer, vBuffer, pokemon2);
     drawPokemon(cBuffer, vBuffer, pokemon3);
     requestAnimationFrame(render);
+}
+
+// Control buttons
+function toggleTranslation() {
+    TRANSFORMATIONS.translation.toggle = !TRANSFORMATIONS.translation.toggle
+}
+
+
+function toggleRotation() {
+    TRANSFORMATIONS.rotation.toggle = !TRANSFORMATIONS.rotation.toggle
+}
+
+function toggleScale() {
+    TRANSFORMATIONS.scale.toggle = !TRANSFORMATIONS.scale.toggle
 }
