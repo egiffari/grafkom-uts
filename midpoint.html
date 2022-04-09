@@ -5,54 +5,70 @@
 </head>
 
 <body>
-<div>
+<!-- <div>
 speed 0% <input id="slider" type="range"
  min="0" max="100" step="10" value="50" />
  100%
-</div>
+</div> -->
 
+<form id="coor">
+    <label>Xa</label>
+    <input id="Xa" name="Xa"><br><br>
+    <label>Ya</label>
+    <input id="Ya" name="Ya"><br><br>
+    <label>Xb</label>
+    <input id="Xb" name="Xb"><br><br>
+    <label>Yb</label>
+    <input id="Yb" name="Yb"><br><br>
+    <input type="button" onClick="midpoint_test()" value="submit">
+</form>
+<!-- <button id="Direction">Change Rotation Direction</button> -->
 
-<button id="Direction">Change Rotation Direction</button>
-
-<select id="Controls" size="3">
+<!-- <select id="Controls" size="3">
     <option value="0">Toggle Rotation Direction</option>
     <option value="1">Spin Faster</option>
     <option value="2">Spin Slower</option>
-</select>
+</select> -->
 
 <canvas id="gl-canvas" width="512" height="512"> </canvas>
 </body>
 
 <script id="vertex-shader" type="x-shader/x-vertex">
-#version 300 es
-
-in vec3 aPosition;
-uniform float uTheta;
-
-void
-main()
-{
-    float s = sin(uTheta);
-    float c = cos(uTheta);
-
-    gl_Position.x = -s*aPosition.y + c*aPosition.x;
-    gl_Position.y =  s*aPosition.x + c*aPosition.y;
-    gl_Position.w = 1.0;
-}
-</script>
-
-<script id="fragment-shader" type="x-shader/x-fragment">
-#version 300 es
-precision mediump float;
-uniform vec4 inColor;
-out vec4 fColor;
-
-void
-main()
-{
-    fColor = inColor;
-}
-</script>
+    #version 300 es
+    
+    in vec4 aPosition;
+    in vec4 aColor;
+    
+    out vec4 vColor;
+  
+    uniform float uTheta;
+    
+    void main() {
+      gl_Position = aPosition;
+      vColor = aColor;
+  
+      float s = sin(uTheta);
+      float c = cos(uTheta);
+    
+      gl_Position.x = -s*aPosition.y + c*aPosition.x;
+      gl_Position.y =  s*aPosition.x + c*aPosition.y;
+      gl_Position.z = 0.0;
+      gl_Position.w = 1.0;
+    }
+  </script>
+  
+  <script id="fragment-shader" type="x-shader/x-fragment">
+    #version 300 es
+    
+    precision mediump float;
+    
+    in vec4 vColor;
+    out vec4 fColor;
+    
+    void main() {
+      fColor = vColor;
+    }
+  </script>
 
 <script src="./Common/initShaders.js"></script>
 <script src="./Common/MVnew.js"></script>
