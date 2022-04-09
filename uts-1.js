@@ -19,10 +19,10 @@ var theta = [0, 0, 0];
 
 var thetaLoc;
 
-const OFFSET = 1/16 *1.25;
-const START_X = OFFSET * 8 * -1;
-const START_Y = OFFSET * 8;
-const START_Z = OFFSET / 2 * -1;
+const OFFSET = 1/16 *1.25 / 4;
+const START_X = OFFSET * 32 * -1 / 2;
+const START_Y = OFFSET * 32;
+const START_Z = 0;
 
 var pokemon = 1;
 
@@ -34,9 +34,9 @@ async function init() {
     gl = canvas.getContext('webgl2');
     if (!gl) alert("WebGL 2.0 isn't available");
 
-    // Get voxel texture
-    await initPaintedVoxels();
-    initVoxels();
+    // Get pixel texture
+    await initPaintedPixels();
+    initPixels();
 
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(85/255, 85/255, 85/255, 1.0);
@@ -54,14 +54,12 @@ async function init() {
     gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
 
     var colorLoc = gl.getAttribLocation(program, "aColor");
-    console.log(colorLoc)
     gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(colorLoc);
 
     var vBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
 
-    console.log(positions)
     gl.bufferData(gl.ARRAY_BUFFER, flatten(positions), gl.STATIC_DRAW);
 
 
@@ -73,20 +71,10 @@ async function init() {
 
     //event listeners for buttons
 
-    document.getElementById("xButton").onclick = function () {
-        axis = xAxis;
-    };
-    document.getElementById("yButton").onclick = function () {
-        axis = yAxis;
-    };
-    document.getElementById("zButton").onclick = function () {
-        axis = zAxis;
-    };
-
     render();
 }
 
-async function initPaintedVoxels() {
+async function initPaintedPixels() {
     var textureCanvas = document.getElementById('texture');
     var context = textureCanvas.getContext('2d');
 
@@ -109,18 +97,18 @@ async function initPaintedVoxels() {
     })
 }
 
-function initVoxels() {
+function initPixels() {
     for (let i = 63; i >= 0; i--) {
         for (let j = 63; j >= 0; j--) {
             let color = colorArray[i][j];
             if (color[3] != 0) {
-                voxel(i, j, vec4(color[0], color[1], color[2], color[3]))
+                pixel(i, j, vec4(color[0], color[1], color[2], color[3]))
             }
         }
     }
 }
 
-function voxel(x, y, color) {
+function pixel(x, y, color) {
     quad(x, y, 1, 0, 3, 2, color);
     quad(x, y, 2, 3, 7, 6, color);
     quad(x, y, 3, 0, 4, 7, color);
@@ -131,13 +119,13 @@ function voxel(x, y, color) {
 
 function quad(x, y, a, b, c, d, color) {
     
-    let L = OFFSET * x + START_X;
+    let L = OFFSET * x / 2 + START_X;
     let U = OFFSET * y - START_Y;
     let B = START_Z;
 
-    let R = L + OFFSET;
+    let R = L + OFFSET / 2;
     let D = U + OFFSET;
-    let F = B + OFFSET;
+    let F = B + 0;
 
     var vertices = [
         vec4(L, D, F, 1.0),
@@ -162,7 +150,7 @@ function quad(x, y, a, b, c, d, color) {
 function render() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    theta[axis] += 2.0;
+    theta[axis] += 0;
     gl.uniform3fv(thetaLoc, theta);
 
     gl.drawArrays(gl.TRIANGLES, 0, positions.length);
