@@ -2,25 +2,48 @@
 <html>
 
 <head>
-    <title>UTS-1</title>
+    <title>LatLab 2-1</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
     <div id="wrapper">
-        <h1>UTS-1</h1>
-        <div>
-            <h2>Muhammad Kenta</h2>
-            <h3>1906350950</h3>
-            <h2>Giffari Faqih</h2>
-            <h3>1806205634</h3>
-        </div>
-        
+        <h1>LatLab 2-1</h1>
+        <h2>Muhammad Kenta</h2>
+        <h3>1906350950</h3>
         <div class="flex">
-            <canvas id="gl-canvas" width="1024" height="512"></canvas>
-            <canvas style="display: none;" id="texture" width="64" height="64"></canvas>
+            <canvas id="gl-canvas" width="512" height="512"></canvas>
+            <canvas style="display: none;" id="texture" width="16" height="16"></canvas>
+
+            <div style="width: 100%; margin-top: 30px; display: flex; flex-direction: column; gap: 15px;">
+                <span>Item</span>
+                <select id="select" onchange="set()">
+                    <option></option>
+                    <option value="apple">Apple</option>
+                    <option value="baked_potato">Baked Potato</option>
+                    <option value="bamboo">Bamboo</option>
+                    <option value="beef">Beef</option>
+                    <option value="blaze_powder">Blaze Powder</option>
+                    <option value="bow_pulling_2">Bow</option>
+                    <option value="cooked_chicken">Cooked Chicken</option>
+                    <option value="diamond_pickaxe">Diamond Pickaxe</option>
+                    <option value="diamond">Diamond</option>
+                    <option value="emerald">Emerald</option>
+                    <option value="ender_eye">Ender Eye</option>
+                    <option value="glow_berries">Glow Berries</option>
+                    <option value="golden_apple">Golden Apple</option>
+                    <option value="golden_sword">Golden Sword</option>
+                    <option value="tropical_fish">Tropical Fish</option>
+                </select>
+            </div>
             <div style="width: 100%; margin-top: 10px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 15px;">
-                <span style="font-size: small;">*Aset gambar diambil dari game Pokemon</span>
+                <span>Rotation Axis</span>
+                <div style="display: flex; gap: 5px;">
+                    <button id="xButton">X</button>
+                    <button id="yButton">Y</button>
+                    <button id="zButton">Z</button>
+                </div>
+                <span style="font-size: small;">*Aset gambar diambil dari game Minecraft</span>
             </div>
         </div>
     </div>
@@ -60,7 +83,7 @@
                 0.0,  0.0, 0.0, 1.0);
     
         vColor = aColor;
-        gl_Position = aPosition;
+        gl_Position = rz * ry * rx * aPosition;
         gl_Position.z = -gl_Position.z;
     }
 </script>
@@ -82,6 +105,6 @@
 
 <script src="./Common/initShaders.js"></script>
 <script src="./Common/MVnew.js"></script>
-<script src="./uts-1.js"></script>
+<script src="./latlab2-1.js"></script>
 
 </html>
