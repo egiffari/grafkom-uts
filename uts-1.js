@@ -1,6 +1,6 @@
 "use strict";
 
-var canvas;
+var canvas = document.getElementById("gl-canvas");;
 var gl;
 
 var numPositions = 10000;
@@ -24,19 +24,42 @@ var matrixLoc;
 var colorLoc;
 var positionLoc;
 
-const OFFSET = 1/16 *1.25 / 4;
-const START_X = OFFSET * 32 * -1 / 2;
-const START_Y = OFFSET * 32;
-const START_Z = 0;
 
-var pokemon1 = new Pokemon(1, M3.identity());
-var pokemon2 = new Pokemon(4, M3.translation(0.6, 0));
-var pokemon3 = new Pokemon(7, M3.translation(-0.6, 0));
+const TRANSFORMATIONS = {
+    translation: new TransformationStep(0.01, (trf) => {
+        if (trf.step >= 0.5 || trf.step <= -0.5) trf.amount = -trf.amount
+        return trf.step - trf.amount
+    }),
+    rotation: new TransformationStep(0.05, (trf) => {
+        let res = trf.step + trf.amount;
+        return res
+    }),
+    scale: new TransformationStep(0.01, (trf) => {
+        if (trf.step > 1.5 || trf.step < 0.5) trf.amount = -trf.amount
+        return trf.step + trf.amount
+    }, 1),
+}
+
+var pokemon1 = new Pokemon(1, M3.identity(), () => {
+    let res = M3.translation(0, TRANSFORMATIONS.translation.step);
+    TRANSFORMATIONS.translation.next()
+    return M3.multiply(res, M3.projection(canvas.width, canvas.height))
+});
+var pokemon2 = new Pokemon(4, M3.translation(0.6, 0), () => {
+    let res = M3.rotation(TRANSFORMATIONS.rotation.step);
+    TRANSFORMATIONS.rotation.next()
+    return M3.multiply(res, M3.projection(canvas.width, canvas.height))
+});
+var pokemon3 = new Pokemon(7, M3.translation(-0.6, 0), () => {
+    let res = M3.scaling(TRANSFORMATIONS.scale.step, TRANSFORMATIONS.scale.step);
+    TRANSFORMATIONS.scale.next()
+    return M3.multiply(res, M3.projection(canvas.width, canvas.height))
+});
 
 init();
 
 async function init() {
-    canvas = document.getElementById("gl-canvas");
+    
 
     gl = canvas.getContext('webgl2');
     if (!gl) alert("WebGL 2.0 isn't available");
@@ -93,7 +116,9 @@ function draw(numVert) {
 function drawPokemon(cBuffer, vBuffer, pokemon) {
     updatePositionBuffer(vBuffer, pokemon.mesh)
     updateColorBuffer(cBuffer, pokemon.color)
-    updateMatrixData(pokemon.originMatrix);
+    let mat = M3.multiply(pokemon.originMatrix, pokemon.animationMatrix)
+    updateMatrixData(mat);
+    pokemon.updateMatrix();
     draw(pokemon.mesh.length)
 }
 
