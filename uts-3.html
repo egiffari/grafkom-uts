@@ -21,18 +21,16 @@
             </div>
         </div>
         <div class="flex">
-            <canvas id="gl-canvas" width="512" height="512"> </canvas>
-            <form id="coor">
-                <label>Xa</label>
-                <input id="Xa" name="Xa">
-                <label>Ya</label>
-                <input id="Ya" name="Ya">
-                <label>Xb</label>
-                <input id="Xb" name="Xb">
-                <label>Yb</label>
-                <input id="Yb" name="Yb">
-                <input style="grid-column: span 2;" type="button" onClick="midpoint_test()" value="Submit">
-            </form>
+            <canvas id="gl-canvas" width="1024" height="512"> </canvas>
+            <div style="width: 100%; margin-top: 30px; display: flex; flex-direction: column; gap: 15px;">
+                <span>Kamera</span>
+                <select>
+                    <option>Default</option>
+                    <option>Oksigen</option>
+                    <option>Hidrogen-1</option>
+                    <option>Hidrogen-2</option>
+                </select>
+            </div>
             <div id="links">
                 <span>Link ke soal lainnya</span>
                 <a href="./uts-1.html">1 - Pokemon</a>
@@ -43,46 +41,8 @@
     </div>
 </body>
 
-<script id="vertex-shader" type="x-shader/x-vertex">
-    #version 300 es
-    
-    in vec4 aPosition;
-    in vec4 aColor;
-    
-    out vec4 vColor;
-  
-    uniform float uTheta;
-    
-    void main() {
-      gl_Position = aPosition;
-      vColor = aColor;
-  
-      float s = sin(uTheta);
-      float c = cos(uTheta);
-    
-      gl_Position.x = -s*aPosition.y + c*aPosition.x;
-      gl_Position.y =  s*aPosition.x + c*aPosition.y;
-      gl_Position.z = 0.0;
-      gl_Position.w = 1.0;
-    }
-  </script>
+<script src="./Common/twgl/twgl-base.js"></script>
 
-<script id="fragment-shader" type="x-shader/x-fragment">
-    #version 300 es
-    
-    precision mediump float;
-    
-    in vec4 vColor;
-    out vec4 fColor;
-    
-    void main() {
-      fColor = vColor;
-    }
-  </script>
-
-<script src="./Common/initShaders.js"></script>
-<script src="./Common/MVnew.js"></script>
-<script src="./Common/flatten.js"></script>
-<script src="./uts-2.js"></script>
+<script src="./uts-3.js"></script>
 
 </html>

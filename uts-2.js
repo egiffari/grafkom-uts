@@ -96,40 +96,7 @@ function init()
 function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT );
-
-    // theta += (direction ? 0.1 : -0.1);
-    // gl.uniform1f(thetaLoc, theta);
-    // if( Math.abs(theta - thetaCompar) >= Math.PI * 2){
-    //   if (inColor == silver){
-    //     inColor = black
-    //     gl.clearColor(1.0, 1.0, 0.0, 1.0);
-    //   }
-    //   else if (inColor == black){
-    //     inColor = silver
-    //     gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    //   }
-    //   thetaCompar = theta
-    // }
-    // gl.uniform4fv(inColorLoc, inColor)
-    // console.log(vertices);
-    // var idx = 0;
     gl.drawArrays(gl.LINE_STRIP, 0, vertices.length);
-    // for (var i = 0; i < vertices.length; i++){
-        
-    //     var obj = vertices[i];
-    //     gl.bindBuffer(gl.ARRAY_BUFFER, vbuffer);
-    //     gl.bufferSubData(gl.ARRAY_BUFFER, 8 * (idx + obj.length), flatten(obj));
-    //     gl.drawArrays(gl.LINES, idx, obj.length);
-    //     idx  = idx + obj.length;
-    //     console.log(idx);
-    //     console.log(vertices);
-    // }
-    
-
-    // setTimeout(
-    //     function () {requestAnimationFrame(render);},
-    //     speed
-    // );
 }
 
 function midpoint_test(){
@@ -141,27 +108,6 @@ function midpoint_test(){
     var Yb = parseInt(coor.elements[3].value);
     midpoint(Xa,Ya,Xb,Yb);
     init();
-    // midpoint(1,1,7,3);
-    // midpoint(3,2,5,1);
-    // midpoint(0,0,6,7);
-    // midpoint(0,0,5,9);
-    // midpoint(0,0,3,2);
-    // midpoint(0,0,4,1);
-    // midpoint(0,0,5,0);
-    // midpoint(0,0,0.4,-0.1);
-    // midpoint(0,0,0.3,-0.2);
-    // midpoint(0,0,0.2,-0.3);
-    // midpoint(0,0,0.1,-0.4);
-    // midpoint(0,0,0,-0.5);
-    // midpoint(0,0,-0.1,-0.4);
-    // midpoint(0,0,-0.2,-0.3);
-    // midpoint(0,0,-0.3,-0.2);
-    // midpoint(0,0,-0.4,-0.1);
-    // midpoint(0,0,-0.5,0,);
-    // midpoint(0,0,-0.4,0.1);
-    // midpoint(0,0,-0.3,0.2);
-    // midpoint(0,0,-0.2,0.3);
-    // midpoint(0,0,-0.1,0.4);
 }
 
 function midpoint(Xa,Ya,Xb,Yb){
@@ -287,77 +233,6 @@ function midpoint(Xa,Ya,Xb,Yb){
             vertices.push(vec2(x/10, y/10));
         }
     }
-    // if(dy <= dx) {
-    //     if(dy > 0){
-    //         while(x < Xb) {
-    //             x++;
-    //             if (d <= 0){
-    //                 d = d + 2 * dy;
-    //             }
-    //             else {
-    //                 d = d + 2 * (dy - dx);
-    //                 y++;
-    //             }
-    //             vertices.push(vec2(x/10, y/10));
-    //         }
-    //     }
-    //     else{
-    //         if(dx > 0){
-    //             if (dyAbs <= dxAbs) {
-    //                 while(x < Xb) {
-    //                     x++;
-    //                     if (d <= 0){
-    //                         d = d + 2 * dyAbs;
-    //                     }
-    //                     else {
-    //                         d = d + 2 * (dyAbs - dx);
-    //                         y--;
-    //                     }
-    //                     vertices.push(vec2(x/10, y/10));
-    //                 }
-    //             }
-    //             else{
-    //                 while(y > Yb) {
-    //                     y--;
-    //                     if (d <= 0){
-    //                         d = d + 2 * dyAbs;
-    //                     }
-    //                     else {
-    //                         d = d + 2 * (dyAbs - dx);
-    //                         y--;
-    //                     }
-    //                     vertices.push(vec2(x/10, y/10));
-    //                 }
-    //             }
-                
-    //         }
-    //         else{
-
-    //         }
-    //     }
-        
-    // }
-    // else if (dy > dx && dx > 0){
-    //     d = 2 * dx - dy;
-    //     var x = Xa;
-    //     var y = Ya;
-    //     line.push(vec2(x, y));
-    //     while(y < Yb) {
-    //         y++;
-    //         if (d <= 0){
-    //             d = d + 2 * dy;
-    //         }
-    //         else {
-    //             d = d + 2 * (dy - dx);
-    //             y++;
-    //         }
-    //         vertices.push(vec2(x/10, y/10));
-    //     }
-    // }    
-    
-    
-
-    // vertices.push(line);
 
     console.log(vertices)
 }
