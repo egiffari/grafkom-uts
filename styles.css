@@ -31,6 +31,7 @@ canvas {
 .flex {
     display: flex;
     flex-direction: column;
+    gap: 30px;
     align-items: center;
     width: 100%;
 }
@@ -76,4 +77,42 @@ select:focus {
 
 #toggle-buttons > button {
     width: 100%;
+}
+
+#links {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+}
+
+a {
+    text-decoration: none;
+    font-family: monospace;
+    font-size: large;
+    color: darkblue;
+    font-weight: 600;
+}
+
+a:hover {
+    color: blue;
+}
+
+#coor {
+    display: grid;
+    grid-template-columns: 2em auto;
+    grid-auto-rows: 2rem;
+    width: 100%;
+    grid-gap: 10px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    font-family: 'Montserrat', sans-serif;
 }

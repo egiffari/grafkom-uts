@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Midpoint</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+</head>
+
+<body>
+    <div id="wrapper">
+        <h1>UTS-2</h1>
+        <div style="display: grid; grid-template-columns: 50% 50%;">
+            <div>
+                <h2>Muhammad Kenta</h2>
+                <h3>1906350950</h3>
+            </div>
+            <div>
+                <h2>Giffari Faqih</h2>
+                <h3>1806205634</h3>
+            </div>
+        </div>
+        <div class="flex">
+            <canvas id="gl-canvas" width="512" height="512"> </canvas>
+            <form id="coor">
+                <label>Xa</label>
+                <input id="Xa" name="Xa">
+                <label>Ya</label>
+                <input id="Ya" name="Ya">
+                <label>Xb</label>
+                <input id="Xb" name="Xb">
+                <label>Yb</label>
+                <input id="Yb" name="Yb">
+                <input style="grid-column: span 2;" type="button" onClick="midpoint_test()" value="Submit">
+            </form>
+            <div id="links">
+                <span>Link ke soal lainnya</span>
+                <a href="./uts-1.html">1 - Pokemon</a>
+                <a href="./uts-2.html">2 - Midpoint</a>
+                <a href="./uts-3.html">3 - Dihydrogen Monoxide</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+    #version 300 es
+    
+    in vec4 aPosition;
+    in vec4 aColor;
+    
+    out vec4 vColor;
+  
+    uniform float uTheta;
+    
+    void main() {
+      gl_Position = aPosition;
+      vColor = aColor;
+  
+      float s = sin(uTheta);
+      float c = cos(uTheta);
+    
+      gl_Position.x = -s*aPosition.y + c*aPosition.x;
+      gl_Position.y =  s*aPosition.x + c*aPosition.y;
+      gl_Position.z = 0.0;
+      gl_Position.w = 1.0;
+    }
+  </script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+    #version 300 es
+    
+    precision mediump float;
+    
+    in vec4 vColor;
+    out vec4 fColor;
+    
+    void main() {
+      fColor = vColor;
+    }
+  </script>
+
+<script src="./Common/initShaders.js"></script>
+<script src="./Common/MVnew.js"></script>
+<script src="./Common/flatten.js"></script>
+<script src="./uts-2.js"></script>
+
+</html>
