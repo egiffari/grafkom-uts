@@ -96,11 +96,10 @@ function init()
 function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT );
-    gl.drawArrays(gl.LINE_STRIP, 0, vertices.length);
+    gl.drawArrays(gl.LINES, 0, vertices.length);
 }
 
 function midpoint_test(){
-    vertices = [];
     var coor = document.getElementById("coor");
     var Xa = parseInt(coor.elements[0].value);
     var Ya = parseInt(coor.elements[1].value);
@@ -133,6 +132,7 @@ function midpoint(Xa,Ya,Xb,Yb){
                 y++;
             }
             vertices.push(vec2(x/10, y/10));
+            vertices.push(vec2(x/10, y/10));
         }
     }
     else if (dy >= 0 && dx >= 0 && dyAbs > dxAbs){
@@ -146,6 +146,7 @@ function midpoint(Xa,Ya,Xb,Yb){
                 d = d + 2 * (dx - dy);
                 x++;
             }
+            vertices.push(vec2(x/10, y/10));
             vertices.push(vec2(x/10, y/10));
         }
     }
@@ -161,6 +162,7 @@ function midpoint(Xa,Ya,Xb,Yb){
                 y--;
             }
             vertices.push(vec2(x/10, y/10));
+            vertices.push(vec2(x/10, y/10));
         }
     }
     else if (dy < 0 && dx >= 0 && dyAbs > dxAbs){
@@ -174,6 +176,7 @@ function midpoint(Xa,Ya,Xb,Yb){
                 d = d + 2 * (dx - dyAbs);
                 x++;
             }
+            vertices.push(vec2(x/10, y/10));
             vertices.push(vec2(x/10, y/10));
         }
     }
@@ -189,6 +192,7 @@ function midpoint(Xa,Ya,Xb,Yb){
                 y--;
             }
             vertices.push(vec2(x/10, y/10));
+            vertices.push(vec2(x/10, y/10));
         }
     }
     else if (dy < 0 && dx < 0 && dyAbs > dxAbs){
@@ -202,6 +206,7 @@ function midpoint(Xa,Ya,Xb,Yb){
                 d = d + 2 * (dxAbs - dyAbs);
                 x--;
             }
+            vertices.push(vec2(x/10, y/10));
             vertices.push(vec2(x/10, y/10));
         } 
     }
@@ -217,6 +222,7 @@ function midpoint(Xa,Ya,Xb,Yb){
                 y++;
             }
             vertices.push(vec2(x/10, y/10));
+            vertices.push(vec2(x/10, y/10));
         }
     }
     else if (dy >= 0 && dx < 0 && dyAbs > dxAbs){
@@ -231,8 +237,9 @@ function midpoint(Xa,Ya,Xb,Yb){
                 x--;
             }
             vertices.push(vec2(x/10, y/10));
+            vertices.push(vec2(x/10, y/10));
         }
     }
-
+    vertices.pop();
     console.log(vertices)
 }
