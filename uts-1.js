@@ -40,17 +40,17 @@ const TRANSFORMATIONS = {
 }
 
 // Angka bisa diganti untuk mengganti jenis pokemon
-var pokemon1 = new Pokemon(2, M3.identity(), () => {
+var pokemon1 = new Pokemon(134, M3.identity(), () => {
     let res = M3.translation(0, TRANSFORMATIONS.translation.step);
     TRANSFORMATIONS.translation.next()
     return M3.multiply(res, M3.projection(canvas.width, canvas.height))
 });
-var pokemon2 = new Pokemon(3, M3.translation(0.6, 0), () => {
+var pokemon2 = new Pokemon(4, M3.translation(0.6, 0), () => {
     let res = M3.rotation(TRANSFORMATIONS.rotation.step);
     TRANSFORMATIONS.rotation.next()
     return M3.multiply(res, M3.projection(canvas.width, canvas.height))
 });
-var pokemon3 = new Pokemon(1, M3.translation(-0.6, 0), () => {
+var pokemon3 = new Pokemon(25, M3.translation(-0.6, 0), () => {
     let res = M3.scaling(TRANSFORMATIONS.scale.step, TRANSFORMATIONS.scale.step);
     TRANSFORMATIONS.scale.next()
     return M3.multiply(res, M3.projection(canvas.width, canvas.height))
