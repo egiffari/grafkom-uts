@@ -24,6 +24,9 @@ var matrixLoc;
 var colorLoc;
 var positionLoc;
 
+var p1;
+var p2;
+var p3;
 
 const TRANSFORMATIONS = {
     translation: new TransformationStep(0.01, (trf) => {
@@ -39,18 +42,54 @@ const TRANSFORMATIONS = {
     }, 1),
 }
 
+let p1ctx = localStorage.getItem("p1ctx");
+if(p1ctx){
+    p1 = p1ctx;
+    document.getElementById("pok1").value = p1
+}
+else{
+    p1 = 2;
+}
+
+let p2ctx = localStorage.getItem("p2ctx");
+if(p2ctx){
+    p2 = p2ctx;
+    document.getElementById("pok2").value = p2
+}
+else{
+    p2 = 3;
+}
+
+let p3ctx = localStorage.getItem("p3ctx");
+if(p3ctx){
+    p3 = p3ctx;
+    document.getElementById("pok3").value = p3
+}
+else{
+    p3 = 1;
+}
+
+function set(){
+    p1 = document.getElementById("pok1").value;
+    p2 = document.getElementById("pok2").value;
+    p3 = document.getElementById("pok3").value;
+    localStorage.setItem("p1ctx", p1);
+    localStorage.setItem("p2ctx", p2);
+    localStorage.setItem("p3ctx", p3);
+    location.reload()
+}
 // Angka bisa diganti untuk mengganti jenis pokemon
-var pokemon1 = new Pokemon(134, M3.identity(), () => {
+var pokemon1 = new Pokemon(p1, M3.identity(), () => {
     let res = M3.translation(0, TRANSFORMATIONS.translation.step);
     TRANSFORMATIONS.translation.next()
     return M3.multiply(res, M3.projection(canvas.width, canvas.height))
 });
-var pokemon2 = new Pokemon(4, M3.translation(0.6, 0), () => {
+var pokemon2 = new Pokemon(p2, M3.translation(0.6, 0), () => {
     let res = M3.rotation(TRANSFORMATIONS.rotation.step);
     TRANSFORMATIONS.rotation.next()
     return M3.multiply(res, M3.projection(canvas.width, canvas.height))
 });
-var pokemon3 = new Pokemon(25, M3.translation(-0.6, 0), () => {
+var pokemon3 = new Pokemon(p3, M3.translation(-0.6, 0), () => {
     let res = M3.scaling(TRANSFORMATIONS.scale.step, TRANSFORMATIONS.scale.step);
     TRANSFORMATIONS.scale.next()
     return M3.multiply(res, M3.projection(canvas.width, canvas.height))
