@@ -1,5 +1,3 @@
-
-
 var M3 = { 						//setup 3x3 transformation matrix object
     identity: function () {
         return [
@@ -77,6 +75,16 @@ var M3 = { 						//setup 3x3 transformation matrix object
     },
 };
 
+function solidColor(vertices, r, g, b, a) {
+    let res = []
+    for (let {} in vertices) {
+        res.push(r)
+        res.push(g)
+        res.push(b)
+        res.push(a)
+    }
+    return new Float32Array(res)
+}
 class TransformationStep {
     amount;
     toggle;
