@@ -108,7 +108,7 @@ function pseudoshadeColor(vertices, r, g, b, a) {
         if (face == 2) {
             face = 0;
         }
-        let factor = 1 - (face * 0.1)
+        let factor = 1 - (face * 0.5)
         res.push(r * factor)
         res.push(g * factor / 2)
         res.push(b * factor / 2)
