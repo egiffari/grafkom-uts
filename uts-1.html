@@ -29,23 +29,21 @@
                     <button onclick="toggleRotation()">Toggle rotasi</button>
                     <button onclick="toggleScale()">Toggle skala</button>
                 </div>
+                <span>Ganti Pokemon</span>
+                <div id="input">
+                    <label>Pokemon 1</label><input type="number" min="1" max="151" value="2" class="slider"
+                        id="pok1"></span>
+                    <label>Pokemon 2</label> <input type="number" min="1" max="151" value="3" class="slider"
+                        id="pok2"></span>
+                    <label>Pokemon 3</label><input type="number" min="1" max="151" value="1" class="slider"
+                        id="pok3"></span>
+                </div>
+                <button id="set-button" onclick="set()">Ubah</button>
             </div>
-            <div style="width: 100%; margin-top: 10px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 15px;">
+            <div
+                style="width: 100%; margin-top: 10px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 15px;">
                 <span style="font-size: small;">*Aset gambar diambil dari game Pokemon</span>
             </div>
-            <div style="width: 100%; margin-top: 10px; display: flex; flex-direction: column; gap: 15px;">
-                <div id="input">
-                    Pokemon 1: <input type="number" min="1" max="151" value="2" class="slider" id="pok1"></span>
-                    Pokemon 2: <input type="number" min="1" max="151" value="3" class="slider" id="pok2"></span> 
-                    Pokemon 3: <input type="number" min="1" max="151" value="1" class="slider" id="pok3"></span> 
-                </div>
-            </div>
-            <div style="width: 100%; margin-top: 10px; display: flex; flex-direction: column; gap: 15px;">
-                <div id="set pokemon button">
-                    <button onclick="set()">set</button>
-                </div>
-            </div>
-            
             <div id="links">
                 <span>Link ke soal lainnya</span>
                 <a href="./uts-1.html">1 - Pokemon</a>

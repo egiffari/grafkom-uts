@@ -48,48 +48,6 @@ function init()
     thetaLoc = gl.getUniformLocation(program, "uTheta");
     inColorLoc = gl.getUniformLocation(program, "inColor")
 
-    // Initialize event handlers
-
-    // document.getElementById("slider").onchange = function(event) {
-    //     speed = 100 - event.target.value;
-    // };
-    // document.getElementById("Direction").onclick = function (event) {
-    //     direction = !direction;
-    // };
-
-    // document.getElementById("Controls").onclick = function( event) {
-    //     switch(event.target.index) {
-    //       case 0:
-    //         direction = !direction;
-    //         break;
-
-    //      case 1:
-    //         speed /= 2.0;
-    //         break;
-
-    //      case 2:
-    //         speed *= 2.0;
-    //         break;
-    //    }
-    // };
-
-    // window.onkeydown = function(event) {
-    //     var key = String.fromCharCode(event.keyCode);
-    //     switch( key ) {
-    //       case '1':
-    //         direction = !direction;
-    //         break;
-
-    //       case '2':
-    //         speed /= 2.0;
-    //         break;
-
-    //       case '3':
-    //         speed *= 2.0;
-    //         break;
-    //     }
-    // };
-
     render();
 };
 

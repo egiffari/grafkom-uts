@@ -48,15 +48,15 @@ async function main() {
     // normal with a_normal etc..
     twgl.setAttributePrefix("a_");
 
-    var oxygenVertices = twgl.primitives.createSphereVertices(16, 4, 2)
+    var oxygenVertices = twgl.primitives.createTorusVertices(16, 4, 16, 16)
     oxygenVertices.color = pseudoshadeColor(oxygenVertices.position, 255, 0, 0, 255)
     delete oxygenVertices.texcoord
 
-    var hydrogen1Vertices = twgl.primitives.createSphereVertices(12, 4, 2)
+    var hydrogen1Vertices = twgl.primitives.createTorusVertices(12, 4, 16, 16)
     hydrogen1Vertices.color = pseudoshadeColor(hydrogen1Vertices.position, 0, 125, 255, 255)
     delete hydrogen1Vertices.texcoord
 
-    var hydrogen2Vertices = twgl.primitives.createSphereVertices(12, 4, 2)
+    var hydrogen2Vertices = twgl.primitives.createTorusVertices(12, 4, 16, 16)
     hydrogen2Vertices.color = pseudoshadeColor(hydrogen2Vertices.position, 0, 255, 255, 255)
     delete hydrogen2Vertices.texcoord
 
