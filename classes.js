@@ -75,16 +75,6 @@ var M3 = { 						//setup 3x3 transformation matrix object
     },
 };
 
-function solidColor(vertices, r, g, b, a) {
-    let res = []
-    for (let {} in vertices) {
-        res.push(r)
-        res.push(g)
-        res.push(b)
-        res.push(a)
-    }
-    return new Float32Array(res)
-}
 class TransformationStep {
     amount;
     toggle;
@@ -104,105 +94,6 @@ class TransformationStep {
         }
     }
 }
-
-class Pokemon3D {
-    static OFFSET = 1 / 16 * 1.25 / 4 * 64 * 10;
-    static START_X = Pokemon3D.OFFSET * 32 * -1;
-    static START_Y = Pokemon3D.OFFSET * 32;
-    static START_Z = Pokemon3D.OFFSET / 2;
-
-    mesh;
-    color;
-    palette;
-    name;
-
-    constructor(name) {
-        this.mesh = [];
-        this.color = [];
-        this.palette = [];
-        this.name = name;
-    }
-
-    async init() {
-        await this.initPaintedVoxels()
-        this.initVoxels()
-    }
-
-    async initPaintedVoxels() {
-        var textureCanvas = document.createElement('canvas')
-        var context = textureCanvas.getContext('2d');
-
-        return new Promise((resolve) => {
-            var texture = new Image();
-            texture.crossOrigin = "Anonymous"
-            texture.src = 'https://raw.githubusercontent.com/egiffari/grafkom-uts/main/images/' + this.name + '.png';
-            texture.onload = async () => {
-                context.drawImage(texture, 0, 0);
-                for (let i = 0; i < 64; i++) {
-                    var row = []
-                    for (let j = 63; j >= 0; j--) {
-                        var imgData = context.getImageData(i, j, 1, 1).data;
-                        row.push([imgData[0] / 255, imgData[1] / 255, imgData[2] / 255, imgData[3] / 255])
-                    }
-                    this.palette.push(row)
-                }
-                resolve(true)
-            }
-        })
-    }
-
-    initVoxels() {
-        for (let i = 63; i >= 0; i--) {
-            for (let j = 63; j >= 0; j--) {
-                let color = this.palette[i][j];
-                if (color[3] != 0) {
-                    this.voxel(i, j, vec4(color[0], color[1], color[2], color[3]))
-                }
-            }
-        }
-    }
-
-    voxel(x, y, color) {
-        this.quad(x, y, 1, 0, 3, 2, color);
-        this.quad(x, y, 2, 3, 7, 6, color);
-        this.quad(x, y, 3, 0, 4, 7, color);
-        this.quad(x, y, 6, 5, 1, 2, color);
-        this.quad(x, y, 4, 5, 6, 7, color);
-        this.quad(x, y, 5, 4, 0, 1, color);
-    }
-
-    quad(x, y, a, b, c, d, color) {
-
-        let L = Pokemon.OFFSET * x + Pokemon.START_X;
-        let U = Pokemon.OFFSET * y - Pokemon.START_Y;
-        let B = Pokemon.START_Z;
-
-        let R = L + Pokemon.OFFSET;
-        let D = U + Pokemon.OFFSET;
-        let F = B + 0;
-
-        var vertices = [
-            vec4(L, D, F, 1.0),
-            vec4(L, U, F, 1.0),
-            vec4(R, U, F, 1.0),
-            vec4(R, D, F, 1.0),
-            vec4(L, D, B, 1.0),
-            vec4(L, U, B, 1.0),
-            vec4(R, U, B, 1.0),
-            vec4(R, D, B, 1.0)
-        ];
-
-        var indices = [a, b, c, a, c, d];
-
-
-        for (var i = 0; i < indices.length; ++i) {
-            this.mesh.push(vertices[indices[i]]);
-            this.color.push(vec4(color));
-        }
-    }
-
-}
-
 class Pokemon {
     static OFFSET = 1 / 16 * 1.25 / 4 * 64 * 10;
     static START_X = Pokemon.OFFSET * 32 * -1;

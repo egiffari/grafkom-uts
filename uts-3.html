@@ -24,11 +24,11 @@
             <canvas id="gl-canvas" width="1024" height="512"> </canvas>
             <div style="width: 100%; margin-top: 30px; display: flex; flex-direction: column; gap: 15px;">
                 <span>Kamera</span>
-                <select>
-                    <option>Default</option>
-                    <option>Oksigen</option>
-                    <option>Hidrogen-1</option>
-                    <option>Hidrogen-2</option>
+                <select id="select" onchange="changeCamera()">
+                    <option value=0>Default</option>
+                    <option value=1>Oksigen</option>
+                    <option value=2>Hidrogen-1</option>
+                    <option value=3>Hidrogen-2</option>
                 </select>
             </div>
             <div id="links">
@@ -41,10 +41,11 @@
     </div>
 </body>
 
+<!-- <script src="https://greggman.github.io/webgl-lint/webgl-lint.js" crossorigin></script> -->
 <script src="./Common/twgl-dist/twgl-full.min.js"></script>
-<script src="https://webgl2fundamentals.org/webgl/resources/flattened-primitives.js"></script>
 <script src="https://webgl2fundamentals.org/webgl/resources/m4.js"></script>
-<script src="./classes.js"></script>
+<script src="./Common/MVnew.js"></script>
+<script src="./classes-twgl.js"></script>
 
 <script src="./uts-3.js"></script>
 

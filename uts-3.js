@@ -33,7 +33,9 @@ void main() {
 }
 `;
 
-function main() {
+var cameraContext = 0
+
+async function main() {
     // Get A WebGL context
     /** @type {HTMLCanvasElement} */
     var canvas = document.querySelector("#gl-canvas");
@@ -46,25 +48,21 @@ function main() {
     // normal with a_normal etc..
     twgl.setAttributePrefix("a_");
 
+    var oxygenVertices = twgl.primitives.createSphereVertices(16, 4, 2)
+    oxygenVertices.color = pseudoshadeColor(oxygenVertices.position, 255, 0, 0, 255)
+    delete oxygenVertices.texcoord
 
-    
+    var hydrogen1Vertices = twgl.primitives.createSphereVertices(12, 4, 2)
+    hydrogen1Vertices.color = pseudoshadeColor(hydrogen1Vertices.position, 0, 125, 255, 255)
+    delete hydrogen1Vertices.texcoord
 
-    var hydrogen1Vertices = twgl.primitives.createCubeVertices(12)
+    var hydrogen2Vertices = twgl.primitives.createSphereVertices(12, 4, 2)
+    hydrogen2Vertices.color = pseudoshadeColor(hydrogen2Vertices.position, 0, 255, 255, 255)
+    delete hydrogen2Vertices.texcoord
 
-
-    hydrogen1Vertices.color = solidColor(hydrogen1Vertices.position, 255, 0, 0, 255)
-
-    console.log(hydrogen1Vertices);
-
-    var bufferInfo = twgl.createBufferInfoFromArrays(gl, hydrogen1Vertices)
-
-    var oxygenBufferInfo = flattenedPrimitives.createCubeBufferInfo(gl, 16);
-    var hydrogen1BufferInfo = twgl.primitives.createCubeBufferInfo(gl, 12)
-    var hydrogen2BufferInfo = bufferInfo
-
-    console.log(oxygenBufferInfo)
-    console.log(hydrogen1BufferInfo)
-    console.log(hydrogen2BufferInfo)
+    var oxygenBufferInfo = twgl.createBufferInfoFromArrays(gl, oxygenVertices)
+    var hydrogen1BufferInfo = twgl.createBufferInfoFromArrays(gl, hydrogen1Vertices)
+    var hydrogen2BufferInfo = twgl.createBufferInfoFromArrays(gl, hydrogen2Vertices)
 
     // setup GLSL program
     var programInfo = twgl.createProgramInfo(gl, [vs, fs]);
@@ -81,21 +79,36 @@ function main() {
 
     // Uniforms for each object.
     var oxygenUniforms = {
-        u_colorMult: [0.5, 1, 0.5, 1],
-        u_matrix: m4.identity(),
+        u_colorMult: [1, 1, 1, 1],
+        u_matrix: twgl.m4.identity(),
     };
     var hydrogen1Uniforms = {
-        u_colorMult: [1, 0.5, 0.5, 1],
-        u_matrix: m4.identity(),
+        u_colorMult: [1, 1, 1, 1],
+        u_matrix: twgl.m4.identity(),
     };
     var hydrogen2Uniforms = {
-        u_colorMult: [0.5, 0.5, 1, 1],
-        u_matrix: m4.identity(),
+        u_colorMult: [1, 1, 1, 1],
+        u_matrix: twgl.m4.identity(),
     };
-    var oxygenTranslation = [0, 0, 0];
-    var hydrogen1Translation = [-40, 0, 0];
-    var hydrogen2Translation = [40, 0, 0];
 
+    var dist = 50
+
+    var oxygenTranslation = [0, 0, 0];
+    var hydrogen1Translation = [-dist, 0, 0];
+    var hydrogen2Translation = [dist, 0, 0];
+
+    var hydrogen1Revolution = 90;
+    var hydrogen1Inclination = 60;
+
+    var hydrogen2Revolution = 90;
+    var hydrogen2Inclination = -60;
+
+    var cameras = [
+        [[0, 0, 100], oxygenTranslation],
+        [oxygenTranslation, [0, 0, 100]],
+        [hydrogen1Translation, oxygenTranslation],
+        [hydrogen2Translation, oxygenTranslation],
+    ]
     function computeMatrix(viewProjectionMatrix, translation, xRotation, yRotation) {
         var matrix = m4.translate(viewProjectionMatrix,
             translation[0],
@@ -122,25 +135,39 @@ function main() {
         // Compute the projection matrix
         var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
         var projectionMatrix =
-            m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
+            twgl.m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
 
+        // Camera Logic
         // Compute the camera's matrix using look at.
-        var cameraPosition = [0, 0, 100];
-        var target = [0, 0, 0];
+        var cameraPosition = cameras[cameraContext][0];
+        var target = cameras[cameraContext][1];
         var up = [0, 1, 0];
-        var cameraMatrix = m4.lookAt(cameraPosition, target, up);
+        var cameraMatrix = twgl.m4.lookAt(cameraPosition, target, up);
 
         // Make a view matrix from the camera matrix.
-        var viewMatrix = m4.inverse(cameraMatrix);
+        var viewMatrix = twgl.m4.inverse(cameraMatrix);
 
-        var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
+        var viewProjectionMatrix = twgl.m4.multiply(projectionMatrix, viewMatrix);
 
-        var oxygenXRotation = time;
-        var oxygenYRotation = time;
-        var hydrogen1XRotation = -time;
-        var hydrogen1YRotation = time;
-        var hydrogen2XRotation = time;
-        var hydrogen2YRotation = -time;
+        hydrogen1Revolution += 3;
+        hydrogen1Inclination -= 9/36;
+        hydrogen1Translation[2] = dist*Math.cos(degToRad(hydrogen1Revolution))
+        hydrogen1Translation[1] = dist*Math.sin(degToRad(hydrogen1Revolution))*Math.cos(degToRad(hydrogen1Inclination))
+        hydrogen1Translation[0] = dist*Math.sin(degToRad(hydrogen1Revolution))*Math.sin(degToRad(hydrogen1Inclination))
+
+        
+        hydrogen2Revolution -= 3;
+        hydrogen2Inclination += 9/36;
+        hydrogen2Translation[2] = dist*Math.cos(degToRad(hydrogen2Revolution))
+        hydrogen2Translation[1] = dist*Math.sin(degToRad(hydrogen2Revolution))*Math.cos(degToRad(hydrogen2Inclination))
+        hydrogen2Translation[0] = dist*Math.sin(degToRad(hydrogen2Revolution))*Math.sin(degToRad(hydrogen2Inclination))
+
+        var oxygenXRotation = 0;
+        var oxygenYRotation = time * 10;
+        var hydrogen1XRotation = time * 10;
+        var hydrogen1YRotation = 0;
+        var hydrogen2XRotation = -time * 10;
+        var hydrogen2YRotation = 0;
 
         gl.useProgram(programInfo.program);
 
@@ -194,6 +221,11 @@ function main() {
 
         requestAnimationFrame(drawScene);
     }
+}
+
+function changeCamera() {
+    let select = document.getElementById("select");
+    cameraContext = select.value
 }
 
 main();
