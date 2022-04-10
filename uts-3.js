@@ -46,10 +46,9 @@ function main() {
   // normal with a_normal etc..
   twgl.setAttributePrefix("a_");
 
-  var sphereBufferInfo = flattenedPrimitives.createSphereBufferInfo(gl, 10, 12, 6);
-  var cubeBufferInfo   = flattenedPrimitives.createCubeBufferInfo(gl, 20);
-  var coneBufferInfo   = flattenedPrimitives.createTruncatedConeBufferInfo(gl, 10, 0, 20, 12, 1, true, false);
-
+  var sphereBufferInfo = "";
+  var cubeBufferInfo   = "";
+  var coneBufferInfo   = "";
   // setup GLSL program
   var programInfo = twgl.createProgramInfo(gl, [vs, fs]);
 
